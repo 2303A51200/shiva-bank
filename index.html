@@ -1,0 +1,361 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Yash Bank </title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4f7fb; --card:#fff; --muted:#667085; --accent:#0b5ed7; --accent-2:#0747a6; --success:#16a34a; --danger:#dc2626;
+    --glass: rgba(255,255,255,0.8);
+  }
+  *{box-sizing:border-box}
+  body{font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,'Helvetica Neue',Arial;margin:0;background:linear-gradient(180deg,#f7fbff, #f4f7fb);color:#0f1724}
+  .app{max-width:1200px;margin:28px auto;padding:20px}
+  header{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .brand{display:flex;align-items:center;gap:12px}
+  .logo{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,var(--accent-2),var(--accent));display:grid;place-items:center;color:white;font-weight:800;font-size:20px}
+  h1{margin:0;font-size:20px}
+  .top-actions{display:flex;gap:10px;align-items:center}
+  .search{padding:8px 12px;border-radius:10px;border:1px solid #e6eef9;background:white}
+  .btn{padding:10px 14px;border-radius:10px;border:none;background:var(--accent);color:white;font-weight:600;cursor:pointer}
+  .ghost{background:transparent;border:1px solid rgba(15,23,36,0.06);color:var(--muted)}
+
+  .layout{display:grid;grid-template-columns:280px 1fr;gap:18px;margin-top:18px}
+  @media (max-width:980px){.layout{grid-template-columns:1fr;}}
+
+  /* SIDEBAR */
+  .sidebar{background:var(--card);border-radius:14px;padding:18px;box-shadow:0 6px 20px rgba(12,20,40,0.06)}
+  .profile{display:flex;gap:12px;align-items:center}
+  .avatar{width:56px;height:56px;border-radius:12px;background:linear-gradient(135deg,#e9f2ff,#dbeeff);display:grid;place-items:center;font-weight:700;color:var(--accent-2)}
+  .nav{margin-top:18px}
+  .nav a{display:flex;align-items:center;gap:12px;padding:10px;border-radius:10px;color:#0f1724;text-decoration:none;margin-bottom:6px}
+  .nav a.active{background:linear-gradient(90deg,var(--accent-2),var(--accent));color:white}
+
+  /* MAIN */
+  .main{display:flex;flex-direction:column;gap:18px}
+  .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
+  @media (max-width:1100px){.cards{grid-template-columns:repeat(2,1fr)}}
+  @media (max-width:700px){.cards{grid-template-columns:1fr}}
+
+  .card{background:var(--card);padding:18px;border-radius:14px;box-shadow:0 6px 20px rgba(12,20,40,0.06);}
+  .acct-balance{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .acct-info{display:flex;gap:12px;align-items:center}
+  .acct-meta{color:var(--muted);font-size:13px}
+  .amount{font-weight:800;font-size:20px}
+
+  .actions{display:flex;gap:10px;margin-top:12px}
+  .quick{display:flex;gap:8px;flex-wrap:wrap}
+  .quick button{background:#f1f7ff;border-radius:10px;padding:10px 12px;border:1px solid rgba(11,94,215,0.06);cursor:pointer}
+
+  .transactions{margin-top:8px}
+  .tx{display:flex;justify-content:space-between;align-items:center;padding:10px 12px;border-radius:10px;margin-bottom:8px;background:linear-gradient(180deg,rgba(2,6,23,0.02),transparent)}
+  .tx .meta{color:var(--muted);font-size:13px}
+  .tx .amt{font-weight:700}
+
+  /* Panels */
+  .split{display:grid;grid-template-columns:1fr 360px;gap:12px}
+  @media (max-width:980px){.split{grid-template-columns:1fr}}
+  .panel-title{display:flex;justify-content:space-between;align-items:center}
+
+  /* Forms */
+  label{font-size:13px;color:var(--muted);display:block;margin-bottom:6px}
+  input,select,textarea{width:100%;padding:10px;border-radius:10px;border:1px solid #e6eef9;background:white}
+  .form-row{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .small{font-size:13px;color:var(--muted)}
+
+  footer{margin-top:22px;color:var(--muted);text-align:center}
+
+  /* responsive nav bottom */
+  .mobile-nav{display:none}
+  @media (max-width:700px){.sidebar{display:none}.mobile-nav{display:flex;position:fixed;left:12px;right:12px;bottom:12px;justify-content:space-around;background:var(--card);padding:10px;border-radius:14px;box-shadow:0 10px 40px rgba(12,20,40,0.08)}}
+
+</style>
+</head>
+<body>
+  <div class="app">
+    <header>
+      <div class="brand">
+        <div class="logo">SB</div>
+        <div>
+          <h1>State Bank — Demo Frontend</h1>
+          <div style="font-size:13px;color:var(--muted)">Secure banking demo UI — frontend only</div>
+        </div>
+      </div>
+      <div class="top-actions">
+        <input class="search" placeholder="Search transactions, payees or services" />
+        <button class="ghost">Help</button>
+        <button class="btn" id="signOut">Sign out</button>
+      </div>
+    </header>
+
+    <div class="layout">
+      <aside class="sidebar">
+        <div class="profile">
+          <div class="avatar">sy</div>
+          <div>
+            <div style="font-weight:700">Shiva yadav</div>
+            <div style="font-size:13px;color:var(--muted)">Personal • Gold</div>
+          </div>
+        </div>
+        <nav class="nav">
+          <a href="#" class="active" data-nav="dashboard">Dashboard</a>
+          <a href="#" data-nav="accounts">Accounts</a>
+          <a href="#" data-nav="payments">Payments</a>
+          <a href="#" data-nav="cards">Cards</a>
+          <a href="#" data-nav="invest">Investments</a>
+          <a href="#" data-nav="offers">Offers</a>
+          <a href="#" data-nav="profile">Profile</a>
+        </nav>
+        <div style="margin-top:12px;font-size:13px;color:var(--muted)">
+          <div style="margin-bottom:6px">Quick balance</div>
+          <div style="display:flex;gap:8px">
+            <div style="flex:1;background:linear-gradient(90deg,#f8fbff,#ffffff);padding:10px;border-radius:10px">₹<strong>72,540</strong><div class="small">Savings</div></div>
+            <div style="flex:1;background:linear-gradient(90deg,#fff8f1,#fff);padding:10px;border-radius:10px">₹<strong>6,200</strong><div class="small">Wallet</div></div>
+          </div>
+        </div>
+      </aside>
+
+      <main class="main">
+        <!-- DASHBOARD -->
+        <section id="dashboard">
+          <div class="cards">
+            <div class="card">
+              <div class="acct-balance">
+                <div class="acct-info">
+                  <div style="width:12px;height:12px;border-radius:3px;background:linear-gradient(135deg,var(--accent),var(--accent-2));margin-right:8px"></div>
+                  <div>
+                    <div class="acct-meta">Savings Account • ****1234</div>
+                    <div class="amount">₹ 72,540.75</div>
+                  </div>
+                </div>
+                <div>
+                  <button class="btn" onclick="openTransfer()">Transfer</button>
+                </div>
+              </div>
+              <div class="actions">
+                <div class="quick">
+                  <button onclick="openTransfer()">Send Money</button>
+                  <button onclick="openPayee()">Pay Payee</button>
+                  <button onclick="openDeposit()">Deposit</button>
+                  <button onclick="openBill()">Pay Bill</button>
+                </div>
+              </div>
+              <div class="transactions">
+                <h4 style="margin:12px 0 8px">Recent transactions</h4>
+                <div class="tx"><div><div style="font-weight:700">Amazon</div><div class="meta">Online • 3 Sep 2025</div></div><div class="amt">-₹2,499</div></div>
+                <div class="tx"><div><div style="font-weight:700">Salary</div><div class="meta">Credited • 1 Sep 2025</div></div><div class="amt" style="color:var(--success)">+₹55,000</div></div>
+                <div class="tx"><div><div style="font-weight:700">Electricity</div><div class="meta">Bill • 29 Aug 2025</div></div><div class="amt">-₹3,400</div></div>
+              </div>
+            </div>
+
+            <div class="card">
+              <div class="panel-title"><h3 style="margin:0">Credit Card</h3><div class="small">Due: ₹3,250 on 15 Sep</div></div>
+              <div style="margin-top:12px">
+                <div style="font-weight:800;font-size:18px">Platinum Classic • **** 9876</div>
+                <div style="margin-top:10px">Available credit: <strong>₹ 1,20,000</strong></div>
+                <div style="margin-top:12px" class="actions">
+                  <button class="btn" onclick="openCardPay()">Pay Now</button>
+                  <button class="ghost">View Statement</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3 style="margin-top:0">Shortcuts</h3>
+              <div style="margin-top:12px;display:flex;flex-direction:column;gap:10px">
+                <div style="display:flex;justify-content:space-between;gap:8px">
+                  <button class="ghost" style="flex:1" onclick="openFixedDeposit()">Open FD</button>
+                  <button class="ghost" style="flex:1" onclick="openMutualFund()">Invest</button>
+                </div>
+                <div style="display:flex;justify-content:space-between;gap:8px">
+                  <button class="ghost" style="flex:1" onclick="openBranches()">Nearest Branch</button>
+                  <button class="ghost" style="flex:1" onclick="openSupport()">Customer Care</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="split">
+            <div class="card">
+              <div class="panel-title"><h3 style="margin:0">Payments & Transfers</h3><div class="small">Fast, UPI & NEFT</div></div>
+              <div style="margin-top:12px">
+                <div style="display:flex;gap:10px;align-items:center">
+                  <select id="payMode"><option value="upi">UPI</option><option value="neft">NEFT</option><option value="rtgs">RTGS</option></select>
+                  <input id="payTo" placeholder="Enter UPI ID / Account" />
+                  <input id="payAmt" placeholder="Amount" />
+                  <button class="btn" onclick="doPay()">Pay</button>
+                </div>
+                <div style="margin-top:12px;color:var(--muted)">Recent payees</div>
+                <div style="display:flex;gap:8px;margin-top:8px">
+                  <button class="ghost" onclick="quickPay('friend@upi')">friend@upi</button>
+                  <button class="ghost" onclick="quickPay('rental@upi')">rental@upi</button>
+                  <button class="ghost" onclick="quickPay('shop@upi')">shop@upi</button>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3 style="margin:0">Offers & Rewards</h3>
+              <div style="margin-top:12px;color:var(--muted)">Cashback on wallet top-ups. Exclusive partner discounts.</div>
+              <ul style="margin-top:12px">
+                <li>5% cashback on fuel (T&C apply)</li>
+                <li>0% EMI on selected appliances</li>
+                <li>Earn reward points on every transaction</li>
+              </ul>
+            </div>
+          </div>
+        </section>
+
+        <!-- ACCOUNTS PAGE (hidden by default) -->
+        <section id="accounts" style="display:none">
+          <div class="cards">
+            <div class="card">
+              <h3>All Accounts</h3>
+              <div style="margin-top:12px">
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:10px;background:#fff">
+                  <div><div class="acct-meta">Savings • ****1234</div><div style="font-weight:800">₹ 72,540.75</div></div>
+                  <div><button class="ghost">Statement</button></div>
+                </div>
+                <div style="height:12px"></div>
+                <div style="display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:10px;background:#fff">
+                  <div><div class="acct-meta">Salary • ****5678</div><div style="font-weight:800">₹ 0.00</div></div>
+                  <div><button class="ghost">Activate</button></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="card">
+              <h3>Fixed Deposits</h3>
+              <div style="margin-top:12px">No active FDs. <button class="ghost" onclick="openFixedDeposit()">Open FD</button></div>
+            </div>
+
+            <div class="card">
+              <h3>Loans</h3>
+              <div style="margin-top:12px">Home loan: ₹ 8,50,000 • EMI ₹ 12,345</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- PAYMENTS PAGE -->
+        <section id="payments" style="display:none">
+          <div class="card"><h3>Payments</h3>
+            <div style="margin-top:12px">
+              <div style="display:flex;gap:8px">
+                <input placeholder="Search bills/merchant" />
+                <button class="btn">Pay Bill</button>
+              </div>
+            </div>
+          </div>
+        </section>
+
+        <!-- CARDS -->
+        <section id="cards" style="display:none">
+          <div class="cards">
+            <div class="card">
+              <h3>Debit Card</h3>
+              <div style="margin-top:12px">Active • Daily limit ₹ 50,000</div>
+              <div style="margin-top:12px" class="actions"><button class="btn">Block Card</button><button class="ghost">View PIN</button></div>
+            </div>
+            <div class="card">
+              <h3>Credit Cards</h3>
+              <div style="margin-top:12px">Platinum Classic • Limit ₹ 1,50,000</div>
+            </div>
+          </div>
+        </section>
+
+        <!-- INVEST -->
+        <section id="invest" style="display:none">
+          <div class="card"><h3>Investments</h3>
+            <div style="margin-top:12px">Mutual funds, SIPs and more. <button class="ghost" onclick="openMutualFund()">Explore</button></div>
+          </div>
+        </section>
+
+        <!-- OFFERS -->
+        <section id="offers" style="display:none">
+          <div class="card"><h3>Offers & Rewards</h3>
+            <ul style="margin-top:12px"><li>Fuel cashback</li><li>Movie discounts</li></ul>
+          </div>
+        </section>
+
+        <!-- PROFILE -->
+        <section id="profile" style="display:none">
+          <div class="card"><h3>Profile</h3>
+            <div style="margin-top:12px">
+              <label>Full name</label>
+              <input value="Yashwanth K" />
+              <div style="height:8px"></div>
+              <label>Mobile</label>
+              <input value="+91 98xxxxxxx" />
+              <div style="height:8px"></div>
+              <label>Email</label>
+              <input value="yash@example.com" />
+              <div style="margin-top:12px" class="actions"><button class="btn">Save</button><button class="ghost">Reset</button></div>
+            </div>
+          </div>
+        </section>
+
+        <footer>Demo UI — Not an official bank website. For educational use only.</footer>
+      </main>
+    </div>
+
+    <div class="mobile-nav">
+      <button onclick="navTo('dashboard')">Home</button>
+      <button onclick="navTo('payments')">Pay</button>
+      <button onclick="navTo('accounts')">Accts</button>
+      <button onclick="navTo('profile')">Profile</button>
+    </div>
+
+  </div>
+
+<script>
+  // Navigation wiring
+  const navLinks = Array.from(document.querySelectorAll('.nav a'));
+  function navTo(key){
+    // hide all sections
+    ['dashboard','accounts','payments','cards','invest','offers','profile'].forEach(id=>{
+      const el = document.getElementById(id);
+      if(el) el.style.display = id===key ? '' : 'none';
+    });
+    navLinks.forEach(a=> a.classList.toggle('active', a.dataset.nav===key));
+    // scroll to top
+    window.scrollTo({top:0,behavior:'smooth'});
+  }
+  navLinks.forEach(a=> a.addEventListener('click', e=>{ e.preventDefault(); navTo(a.dataset.nav); }));
+
+  // Simple simulated actions
+  function openTransfer(){ navTo('payments'); alert('Open transfer modal (demo)'); }
+  function openPayee(){ alert('Open payee list (demo)'); }
+  function openDeposit(){ alert('Open deposit (demo)'); }
+  function openBill(){ alert('Open biller (demo)'); }
+  function openCardPay(){ alert('Open card payment (demo)'); }
+  function openFixedDeposit(){ alert('Open Fixed Deposit flow (demo)'); }
+  function openMutualFund(){ alert('Open Mutual Fund flow (demo)'); }
+  function openBranches(){ alert('Show branches map (demo)'); }
+  function openSupport(){ alert('Contact support (demo)'); }
+
+  function doPay(){
+    const mode = document.getElementById('payMode').value;
+    const to = document.getElementById('payTo').value || 'friend@upi';
+    const amt = document.getElementById('payAmt').value || '1000';
+    alert(Payment initiated: ${amt} via ${mode} to ${to} (demo only));
+  }
+  function quickPay(id){ document.getElementById('payTo').value = id; document.getElementById('payAmt').value = 500; }
+
+  document.getElementById('signOut').addEventListener('click', ()=>{ alert('Signed out (demo)'); });
+
+  // Accessibility: keyboard nav
+  document.addEventListener('keydown', e=>{
+    if(e.key==='/' && document.activeElement.tagName!=='INPUT'){
+      e.preventDefault(); document.querySelector('.search').focus();
+    }
+  });
+
+  // Initial state
+  navTo('dashboard');
+</script>
+</body>
+</html>
